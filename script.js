@@ -49,11 +49,8 @@ const COLORS = [
 const ROWS = 20;
 const COLS = 10;
 
-// 🎵 Add sounds
-let lineClearSound = new Audio("lineclear.mp3");
-let gameOverSound = new Audio("gameover.mp3");
 
-let canvas = document.querySelector("#tetris");
+let canvas = document.querySelector("#BLOCK-BLAST");
 let scoreboard = document.querySelector("h2");
 let ctx = canvas.getContext("2d");
 ctx.scale(30,30);
@@ -75,29 +72,29 @@ function restartGame() {
     renderGrid();
 }
 
-// Restart button listener
+
 document.getElementById("restartBtn").addEventListener("click", restartGame);
 
-// Pause button listener
+
 document.getElementById("pauseBtn").addEventListener("click", function(){
     togglePause();
 
-    // Change symbol depending on state
+    
     let btn = document.getElementById("pauseBtn");
     if(isPaused){
-        btn.innerHTML = "▶";   // show play symbol when paused
+        btn.innerHTML = "▶";   
     } else {
-        btn.innerHTML = "⏸";  // show pause symbol when running
+        btn.innerHTML = "⏸"; 
     }
 });
 
 
 
 console.log(grid);
-//console.log(pieceObj);
+
 function generateRandomPiece(){
     let ran = Math.floor (Math.random()*7);
-    //console.log(SHAPES[ran]);
+  
     let piece = SHAPES[ran];
     let colorIndex = ran+1;
     let x = 4;
@@ -107,7 +104,7 @@ function generateRandomPiece(){
 }
 
 
-gameInterval = setInterval(newGameState, 500);
+gameInterval = setInterval(newGameState, 300);
 
 
 function newGameState(){
@@ -134,9 +131,7 @@ function checkGrid(){
             grid.unshift([0,0,0,0,0,0,0,0,0,0]);
             count++;
         }
-            if(count > 0){
-        lineClearSound.play();   // play sound when line clears
-    }
+            
 
     }
     if(count == 1){
@@ -166,30 +161,35 @@ function renderPiece(){
 }
 
 
-function moveDown(){
-    if(!collision(pieceObj.x,pieceObj.y+1))
-       pieceObj.y+=1;
-       else{
-           for(let i=0;i<pieceObj.piece.length;i++){
-            for(let j=0;j<pieceObj.piece[i].length;j++){
-                if(pieceObj.piece[i][j] == 1){
-                    let p = pieceObj.x+j;
-                    let q = pieceObj.y+i;
+function moveDown() {
+    if (!collision(pieceObj.x, pieceObj.y + 1)) {
+        pieceObj.y += 1;
+    } else {
+     
+        for (let i = 0; i < pieceObj.piece.length; i++) {
+            for (let j = 0; j < pieceObj.piece[i].length; j++) {
+                if (pieceObj.piece[i][j] == 1) {
+                    let p = pieceObj.x + j;
+                    let q = pieceObj.y + i;
                     grid[q][p] = pieceObj.colorIndex;
                 }
             }
         }
-        if(pieceObj.y == 0){
-    gameOverSound.play();   // 🎵 play Game Over sound
-    alert("Game Over");
-    restartGame();          // reset game after alert
-}
+
+        
+        if (pieceObj.y === 0) {
+            isGameOver = true;
+            clearInterval(gameInterval);
+            renderGameOver();
+            return;
+        }
 
         pieceObj = null;
+    }
 
-        }
     renderGrid();
 }
+
 function moveLeft(){
     if(!collision(pieceObj.x-1,pieceObj.y))
        pieceObj.x-=1;
@@ -267,14 +267,29 @@ function renderGrid(){
     }
     renderPiece();
 }
+function renderGameOver() {
+    
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    ctx.fillRect(0, 0, COLS, ROWS);
+
+
+    ctx.fillStyle = "white";
+    ctx.font = "1.2px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER", COLS / 2, ROWS / 2);
+
+    
+    ctx.font = "0.7px Arial";
+    ctx.fillText("Press Restart to Play Again", COLS / 2, ROWS / 2 + 2);
+}
 
 function togglePause() {
     if (isPaused) {
-        // resume game
-        gameInterval = setInterval(newGameState, 500);
+        
+        gameInterval = setInterval(newGameState, 300);
         isPaused = false;
     } else {
-        // pause game
+      
         clearInterval(gameInterval);
         isPaused = true;
     }
