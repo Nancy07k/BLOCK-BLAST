@@ -30,8 +30,7 @@ h2 {
     text-transform: uppercase;
 }
 
-
-#tetris{
+#BLOCK-BLAST{
     background-color: whitesmoke;
     box-shadow: 0 0 25px 0 rgb(151, 108, 1);
     border: 1px solid black;
@@ -40,7 +39,7 @@ h2 {
     
 }
 #pauseBtn {
-    font-size: 20px;  /* smaller than before */
+    font-size: 20px;  
     width: 45px;
     height: 45px;
     border-radius: 20%;
